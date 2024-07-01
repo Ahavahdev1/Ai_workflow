@@ -1,0 +1,571 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7d8a5d2f-b0c8-482a-a03e-ceaaf13ef7ef",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        400,
+        340
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfa7c4c9-9889-45ba-9c9a-040b402e8460",
+              "name": "NomeCliente",
+              "value": "Eleonora",
+              "type": "string"
+            },
+            {
+              "id": "e1f51a33-e339-4902-9d07-3665c6a139c7",
+              "name": "TelefoneCliente",
+              "value": "4185",
+              "type": "string"
+            },
+            {
+              "id": "eb17bac7-1338-4210-8826-59d866f53307",
+              "name": "TelefoneEmpresa",
+              "value": "15996885952",
+              "type": "string"
+            },
+            {
+              "id": "3da96fa9-f8fb-4b04-8adc-1c69a1abe251",
+              "name": "Mensagem",
+              "value": "Qual a formação do dono da empresa?",
+              "type": "string"
+            },
+            {
+              "id": "b021fe8b-c0ae-4cae-b090-ca911c9e569f",
+              "name": "ApiDify",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "b50400e9-2582-46e3-8821-00ba58e912cf",
+              "name": "IdConversa",
+              "value": "d8ec694b-030c-4a6c-bd52-4d548f94caa5",
+              "type": "string"
+            },
+            {
+              "id": "cd5fe07e-2bfe-4de2-8290-97c33dabaca2",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "05468bee-9da6-4544-b51b-204b74dd1346",
+      "name": "CamposIniciais",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f28320d1-c8ba-4d39-927f-b6969f953a81",
+              "name": "resposta",
+              "value": "={{ $json.answer }}",
+              "type": "string"
+            },
+            {
+              "id": "4211a885-f292-427e-8411-f2e7eae19846",
+              "name": "conversa_Id",
+              "value": "d8ec694b-030c-4a6c-bd52-4d548f94caa5",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "12a84e27-925c-4dea-9fde-a6b5440cc1a3",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1660,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Ia_empresa",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telefone",
+              "keyValue": "={{ $json.TelefoneEmpresa }}"
+            }
+          ]
+        }
+      },
+      "id": "d0a2c1b6-50f9-420a-9efc-98730e47fd85",
+      "name": "Supabase get empresa",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        740,
+        340
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "tXNOZMUY5Fb5SwV8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Ia_clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telefoneCliente",
+              "keyValue": "={{ $('CamposIniciais').item.json.TelefoneCliente }}"
+            }
+          ]
+        }
+      },
+      "id": "e677eb1b-cd3c-428d-8db8-47e85ef489b8",
+      "name": "Supabase get cliente",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        940,
+        340
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "tXNOZMUY5Fb5SwV8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "334ab81f-c824-47e7-ae7f-b2ed5cf11abe",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6ddbe121-e011-48bd-a66a-ad88951a1d41",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "0bf2a8d3-a9e4-4f9e-b9ab-1df814df6e0a",
+              "leftValue": "={{ $json.conversaIdDify }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2d2f9a47-2e2d-4f72-83e2-835c1d957a12",
+      "name": "If 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dify.ai/v1/chat-messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Supabase get empresa').item.json.chaveDify }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $('CamposIniciais').item.json.Mensagem }}"
+            },
+            {
+              "name": "response_mode",
+              "value": "blocking"
+            },
+            {
+              "name": "conversation_id",
+              "value": "="
+            },
+            {
+              "name": "user",
+              "value": "={{ $('CamposIniciais').item.json.NomeCliente }}"
+            },
+            {
+              "name": "inputs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af60017a-7223-4ac7-9619-578453108593",
+      "name": "http request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "Ia_clientes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nomeCliente",
+              "fieldValue": "={{ $('CamposIniciais').item.json.NomeCliente }}"
+            },
+            {
+              "fieldId": "telefoneCliente",
+              "fieldValue": "={{ $('CamposIniciais').item.json.TelefoneCliente }}"
+            },
+            {
+              "fieldId": "IdEmpresaCliente",
+              "fieldValue": "={{ $('Supabase get empresa').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "id": "bdb19570-4a0a-49c9-a21e-a899740affbc",
+      "name": "Supabase cria cliente",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        460
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "tXNOZMUY5Fb5SwV8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Ia_clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Supabase get cliente').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversaIdDify",
+              "fieldValue": "={{ $json.conversation_id }}"
+            }
+          ]
+        }
+      },
+      "id": "485194ef-a926-4999-a344-18550c7a61e4",
+      "name": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        320
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "tXNOZMUY5Fb5SwV8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dify.ai/v1/chat-messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Supabase get empresa').item.json.chaveDify }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $('CamposIniciais').item.json.Mensagem }}"
+            },
+            {
+              "name": "response_mode",
+              "value": "blocking"
+            },
+            {
+              "name": "conversation_id",
+              "value": "={{ $('Supabase get cliente').item.json.conversaIdDify }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('CamposIniciais').item.json.NomeCliente }}"
+            },
+            {
+              "name": "inputs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fad6e144-1b2e-46ca-b371-f9d74452bbf6",
+      "name": "http request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f28320d1-c8ba-4d39-927f-b6969f953a81",
+              "name": "resposta",
+              "value": "={{ $('http request1').item.json.answer }}",
+              "type": "string"
+            },
+            {
+              "id": "4211a885-f292-427e-8411-f2e7eae19846",
+              "name": "conversa_Id",
+              "value": "={{ $json.conversaIdDify }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2961d46c-71af-46af-82b0-7a90c767a679",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        320
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "CamposIniciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CamposIniciais": {
+      "main": [
+        [
+          {
+            "node": "Supabase get empresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase get empresa": {
+      "main": [
+        [
+          {
+            "node": "Supabase get cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase get cliente": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Supabase cria cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If 1": {
+      "main": [
+        [
+          {
+            "node": "http request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "http request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase cria cliente": {
+      "main": [
+        [
+          {
+            "node": "Supabase get cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http request1": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "335b99b8-8b6a-4ad7-aa07-1b1e4b798677",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9f4a538a1c28aaea6d3bf02b8eca6c940eee93779639ad47c335279eb428bf1c"
+  },
+  "id": "u81VSJcgTcB3Zhwt",
+  "tags": []
+}
